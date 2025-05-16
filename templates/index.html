@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Business Analyst</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Business Analyst</h1>
+        
+        <!-- Step 1: Select Task -->
+        <div class="step" id="step1">
+            <h2>What do you want to do?</h2>
+            <form method="POST" enctype="multipart/form-data" onsubmit="return validateStep1()">
+                <label><input type="radio" name="task" value="data_analysis" required> Data Analysis</label><br>
+                <label><input type="radio" name="task" value="business_analysis"> Business Analysis</label><br>
+                <label><input type="radio" name="task" value="preprocessing"> Data Preprocessing</label><br>
+                <button type="button" onclick="showStep2()">Next</button>
+            </form>
+        </div>
+
+        <!-- Step 2: Task Options -->
+        <div class="step" id="step2" style="display: none;">
+            <h2>Select Options</h2>
+            <form method="POST" enctype="multipart/form-data" id="taskForm">
+                <div id="dataAnalysisOptions" style="display: none;">
+                    <label for="option">Select Analysis:</label>
+                    <select name="option" id="option">
+                        <option value="summary">Summary Statistics</option>
+                        <option value="correlation">Correlation Analysis</option>
+                        <option value="trend">Trend Analysis</option>
+                        <option value="cluster">Clustering</option>
+                        <option value="predict">Predictive Modeling</option>
+                    </select>
+                </div>
+                <div id="preprocessingOptions" style="display: none;">
+                    <h3>Preprocessing Options</h3>
+                    <label><input type="checkbox" name="preprocessing" value="fill_missing_mean"> Fill missing values with mean</label><br>
+                    <label><input type="checkbox" name="preprocessing" value="fill_missing_median"> Fill missing values with median</label><br>
+                    <label><input type="checkbox" name="preprocessing" value="drop_missing"> Drop missing values</label><br>
+                    <label><input type="checkbox" name="preprocessing" value="one_hot_encode"> One-hot encode categorical variables</label><br>
+                    <label><input type="checkbox" name="preprocessing" value="normalize"> Normalize numeric data</label><br>
+                </div>
+                <input type="file" name="file" accept=".csv" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <!-- Display Results or Errors -->
+        {% if result %}
+            <h2>Results for {{ filename }}</h2>
+            <div class="results">
+                {{ result | safe }}
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function showStep2() {
+            const task = document.querySelector('input[name="task"]:checked').value;
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+
+            if (task === "data_analysis" || task === "business_analysis") {
+                document.getElementById('dataAnalysisOptions').style.display = 'block';
+            } else if (task === "preprocessing") {
+                document.getElementById('preprocessingOptions').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
